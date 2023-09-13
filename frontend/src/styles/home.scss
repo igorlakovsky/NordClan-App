@@ -1,0 +1,14 @@
+.home-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 0 60px;
+  background-color: #f2f2f2;
+
+  &__wrapper {
+    flex-grow: 1;
+    padding: 0 20px;
+    background-color: #fff;
+    box-shadow: 0 0 4px 0 #0000000d;
+  }
+}
