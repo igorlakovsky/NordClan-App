@@ -1,25 +1,41 @@
 import '../styles/home.scss'
 
-import { Space, Table, Tag, Typography } from 'antd'
+import { Divider, Input, Space, Table, Tag, Typography } from 'antd'
 
 import type { ColumnsType } from 'antd/es/table'
 
 const { Title, Paragraph, Text, Link } = Typography
+const { Search } = Input
 
 interface DataType {
-  key: string
+  id: string
+  photo: string
   name: string
   age: number
-  address: string
   tags: string[]
 }
 
+const data: DataType[] = [
+  {
+    id: '1',
+    photo: 'pancakes.jpg',
+    name: 'Банановые панкейки',
+    age: 32,
+    tags: ['nice', 'developer'],
+  },
+]
+
 const columns: ColumnsType<DataType> = [
   {
-    title: 'Name',
+    title: 'Название',
     dataIndex: 'name',
     key: 'name',
-    render: (text) => <a>{text}</a>,
+    render: (text, { photo }) => (
+      <div className="table__title">
+        <img className="table__title__photo" src={`images/${photo}`} />
+        <div className="table__title__text">{text}</div>
+      </div>
+    ),
   },
   {
     title: 'Age',
@@ -28,8 +44,8 @@ const columns: ColumnsType<DataType> = [
   },
   {
     title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
+    dataIndex: 'photo',
+    key: 'photo',
   },
   {
     title: 'Tags',
@@ -51,49 +67,23 @@ const columns: ColumnsType<DataType> = [
       </>
     ),
   },
-  {
-    title: 'Action',
-    key: 'action',
-    render: (_, record) => (
-      <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-]
-
-const data: DataType[] = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
 ]
 
 export default function Home() {
   return (
     <main className="home-page">
       <div className="home-page__wrapper">
-        <Typography>
-          <Title level={2}>Список рецептов</Title>
-        </Typography>
+        <Title level={1} className="home-page__title">
+          Кулинарная книга
+        </Title>
+        <Paragraph type="secondary" className="home-page__description">
+          Сервис, в котором вы можете просмотреть список рецептов опубликованные
+          пользователями. Зарегистрируйтесь для возможности создавать свои
+          уникальные рецепты и делиться ими с другими людьми.
+        </Paragraph>
+        <Divider />
+        <Title level={4}>Список рецептов</Title>
+        <Search placeholder="Поиск по рецептам" className="home-page__search" />
         <Table columns={columns} dataSource={data} />
       </div>
     </main>

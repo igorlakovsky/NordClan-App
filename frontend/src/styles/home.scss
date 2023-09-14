@@ -8,7 +8,42 @@
   &__wrapper {
     flex-grow: 1;
     padding: 0 20px;
+    padding-top: 30px;
     background-color: #fff;
     box-shadow: 0 0 4px 0 #0000000d;
+  }
+
+  &__title {
+    text-align: center;
+  }
+
+  &__description {
+    width: 80%;
+    margin: auto;
+    text-align: center;
+  }
+
+  &__search {
+    width: 240px;
+    margin-bottom: 10px;
+  }
+}
+
+.table {
+  &__title {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+
+    &__photo {
+      width: 90px;
+      height: 90px;
+      border-radius: 4px;
+    }
+
+    &__text {
+      font-size: 16px;
+      font-weight: 500;
+    }
   }
 }
