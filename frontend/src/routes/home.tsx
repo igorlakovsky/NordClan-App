@@ -13,6 +13,7 @@ interface DataType {
   name: string
   age: number
   tags: string[]
+  key: number
 }
 
 const data: DataType[] = [
@@ -22,6 +23,7 @@ const data: DataType[] = [
     name: 'Банановые панкейки',
     age: 32,
     tags: ['nice', 'developer'],
+    key: 1,
   },
 ]
 
@@ -73,6 +75,9 @@ export default function Home() {
   return (
     <main className="home-page">
       <div className="home-page__wrapper">
+        <div className="home-page__logo">
+          <img src="images/chef.png"></img>
+        </div>
         <Title level={1} className="home-page__title">
           Кулинарная книга
         </Title>
@@ -81,10 +86,25 @@ export default function Home() {
           пользователями. Зарегистрируйтесь для возможности создавать свои
           уникальные рецепты и делиться ими с другими людьми.
         </Paragraph>
-        <Divider />
-        <Title level={4}>Список рецептов</Title>
-        <Search placeholder="Поиск по рецептам" className="home-page__search" />
-        <Table columns={columns} dataSource={data} />
+        <Divider
+          className="home-page__divider"
+          orientation="left"
+          orientationMargin="0"
+        >
+          Список рецептов
+        </Divider>
+        <Search
+          placeholder="Поиск по рецептам"
+          className="home-page__search"
+          size="large"
+        />
+        <Table
+          showHeader={false}
+          columns={columns}
+          dataSource={data}
+          pagination={{ position: ['bottomCenter'] }}
+          className="table"
+        />
       </div>
     </main>
   )

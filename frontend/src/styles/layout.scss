@@ -1,0 +1,62 @@
+.app {
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  width: 100%;
+  background: rgb(241 241 241 / 60%);
+  background: linear-gradient(
+    90deg,
+    rgb(245 245 245 / 60%) 0%,
+    rgb(243 243 243 / 60%) 20%,
+    rgb(255 255 255 / 60%) 100%
+  );
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 6px rgb(176 183 185 / 60%);
+
+  &__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 80%;
+    height: 100%;
+    padding: 8px 0 12px;
+    margin: auto;
+  }
+
+  &__logo {
+    cursor: pointer;
+  }
+
+  &__user {
+    margin-top: 10px;
+    cursor: pointer;
+
+    img {
+      width: 40px;
+      height: 40px;
+      filter: grayscale(20%);
+    }
+  }
+}
+
+.layout {
+  height: calc(100vh - 93px);
+  overflow: auto;
+}
+
+.layout::-webkit-scrollbar {
+  width: 12px;
+}
+
+.layout::-webkit-scrollbar-track {
+  background: #f2f2f2;
+}
+
+.layout::-webkit-scrollbar-thumb {
+  background-color: #3b727fc2;
+  border: 3px solid #f2f2f2;
+  border-radius: 20px;
+}
