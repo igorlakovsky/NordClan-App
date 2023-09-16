@@ -1,19 +1,25 @@
 import '../styles/home.scss'
 
-import { Divider, Input, Space, Table, Tag, Typography } from 'antd'
+import { Divider, Input, Table, Typography } from 'antd'
+import { IngredientType, TableRecipe } from '../components/TableRecipe'
 
 import type { ColumnsType } from 'antd/es/table'
+import { FieldTimeOutlined } from '@ant-design/icons'
+import TableCard from '../components/TableCard'
 
-const { Title, Paragraph, Text, Link } = Typography
+const { Title, Paragraph } = Typography
 const { Search } = Input
 
 interface DataType {
   id: string
   photo: string
   name: string
-  age: number
   tags: string[]
   key: number
+  author: string
+  recipe: IngredientType[]
+  time: number
+  rating: number
 }
 
 const data: DataType[] = [
@@ -21,9 +27,17 @@ const data: DataType[] = [
     id: '1',
     photo: 'pancakes.jpg',
     name: 'Банановые панкейки',
-    age: 32,
     tags: ['nice', 'developer'],
     key: 1,
+    author: 'test',
+    recipe: [
+      { title: 'Ингредиент', count: '500 г' },
+      { title: 'Ингредиент', count: '500 г' },
+      { title: 'Ингредиент', count: '500 г' },
+      { title: 'Ингредиент', count: '500 г' },
+    ],
+    time: 120,
+    rating: 5,
   },
 ]
 
@@ -32,42 +46,33 @@ const columns: ColumnsType<DataType> = [
     title: 'Название',
     dataIndex: 'name',
     key: 'name',
-    render: (text, { photo }) => (
-      <div className="table__title">
-        <img className="table__title__photo" src={`images/${photo}`} />
-        <div className="table__title__text">{text}</div>
+    render: (name, { photo, tags, author }) => (
+      <TableCard name={name} photo={photo} tags={tags} author={author} />
+    ),
+  },
+  {
+    title: 'Рецепт',
+    dataIndex: 'recipe',
+    key: 'recipe',
+    render: (recipe) => (
+      <TableRecipe ingredients={recipe} servings={6}></TableRecipe>
+    ),
+  },
+  {
+    title: 'Сложность',
+    dataIndex: 'time',
+    key: 'time',
+    render: (time) => (
+      <div className="table__time">
+        <FieldTimeOutlined style={{ fontSize: '16px' }} />
+        <span>{time} МИНУТ</span>
       </div>
     ),
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-  },
-  {
-    title: 'Address',
-    dataIndex: 'photo',
-    key: 'photo',
-  },
-  {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? 'geekblue' : 'green'
-          if (tag === 'loser') {
-            color = 'volcano'
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          )
-        })}
-      </>
-    ),
+    title: 'Рейтинг',
+    dataIndex: 'rating',
+    key: 'rating',
   },
 ]
 
@@ -88,8 +93,8 @@ export default function Home() {
         </Paragraph>
         <Divider
           className="home-page__divider"
-          orientation="left"
-          orientationMargin="0"
+          // orientation="left"
+          // orientationMargin="0"
         >
           Список рецептов
         </Divider>
@@ -99,7 +104,7 @@ export default function Home() {
           size="large"
         />
         <Table
-          showHeader={false}
+          showHeader={true}
           columns={columns}
           dataSource={data}
           pagination={{ position: ['bottomCenter'] }}

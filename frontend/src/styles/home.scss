@@ -1,8 +1,10 @@
 .home-page {
   display: flex;
   flex-direction: column;
+  width: 80%;
   min-height: 100vh;
-  padding-top: 80px;
+  padding: 80px 0;
+  margin: auto;
   user-select: none;
   background-color: #f2f2f2;
 
@@ -19,9 +21,7 @@
 
   &__wrapper {
     flex-grow: 1;
-    width: 70%;
-    padding: 80px 80px 0;
-    margin: auto;
+    padding: 80px;
     background-color: #fff;
     border: 1px solid #e9e9e9;
     border-radius: 8px;
@@ -43,6 +43,7 @@
 
   &__divider {
     padding: 0 16px;
+    margin-bottom: 18px !important;
     font-size: 18px !important;
     color: #234a53 !important;
   }
@@ -50,28 +51,21 @@
   &__search {
     width: 320px;
     padding: 0 16px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
   }
 }
 
 .table {
-  margin-top: 12px;
-
-  &__title {
+  &__time {
     display: flex;
-    gap: 32px;
-    align-items: center;
+    flex-direction: row;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgb(33 54 59 / 85%);
 
-    &__photo {
-      width: 90px;
-      height: 90px;
-      border-radius: 4px;
-    }
-
-    &__text {
-      font-size: 22px;
-      font-weight: 600;
-      color: #25464e;
-    }
+    // span {
+    //   font-size: 12px;
+    // }
   }
 }
