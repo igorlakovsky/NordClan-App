@@ -1,23 +1,15 @@
 import '../styles/TableCard.scss'
 
-import { Tag } from 'antd'
 import { useNavigate } from 'react-router-dom'
 
 type CardProps = {
   id: string
   photo: string
   name: string
-  tags: string[]
   author: string
 }
 
-export default function TableCard({
-  id,
-  photo,
-  name,
-  tags,
-  author,
-}: CardProps) {
+export default function TableCard({ id, photo, name, author }: CardProps) {
   const navigate = useNavigate()
 
   const onClick = () => {
@@ -30,11 +22,6 @@ export default function TableCard({
       <div className="table__card__description">
         <div className="table__card__name">{name}</div>
         <div className="table__card__author">{`Автор: ${author}`}</div>
-        <div className="table__card__tags">
-          {tags.map((tag) => {
-            return <Tag key={tag}>{tag.toUpperCase()}</Tag>
-          })}
-        </div>
       </div>
     </div>
   )

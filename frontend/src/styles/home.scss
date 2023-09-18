@@ -48,10 +48,21 @@
     color: #234a53 !important;
   }
 
+  &__toolbar {
+    display: flex;
+    justify-content: space-between;
+  }
+
   &__search {
-    width: 320px;
+    width: 280px;
     padding: 0 16px;
     margin-bottom: 20px;
+  }
+
+  &__modal {
+    .ant-modal-content {
+      margin: 60px 0;
+    }
   }
 }
 

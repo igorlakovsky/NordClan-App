@@ -1,11 +1,17 @@
 import '../styles/home.scss'
 
-import { Divider, Input, Table, Typography } from 'antd'
-import { FieldTimeOutlined, HeartOutlined } from '@ant-design/icons'
+import { Button, Divider, Input, Modal, Table, Typography } from 'antd'
+import {
+  FieldTimeOutlined,
+  HeartOutlined,
+  PlusOutlined,
+} from '@ant-design/icons'
 import { IngredientType, TableRecipe } from '../components/TableRecipe'
 
 import type { ColumnsType } from 'antd/es/table'
+import RecipeModal from '../components/RecipeModal'
 import TableCard from '../components/TableCard'
+import { useState } from 'react'
 
 const { Title, Paragraph } = Typography
 const { Search } = Input
@@ -14,7 +20,6 @@ type RecipeType = {
   id: string
   photo: string
   name: string
-  tags: string[]
   key: number
   author: string
   servings: number
@@ -28,7 +33,6 @@ const data: RecipeType[] = [
     id: '1',
     photo: 'pancakes.jpg',
     name: 'Банановые панкейки',
-    tags: ['nice', 'developer'],
     key: 1,
     author: 'test',
     servings: 6,
@@ -45,7 +49,6 @@ const data: RecipeType[] = [
     id: '2',
     photo: 'pancakes.jpg',
     name: 'Банановые панкейки 2',
-    tags: ['nice', 'developer'],
     key: 2,
     author: 'test',
     servings: 4,
@@ -65,14 +68,8 @@ const columns: ColumnsType<RecipeType> = [
     title: 'Название',
     dataIndex: 'name',
     key: 'name',
-    render: (name, { id, photo, tags, author }) => (
-      <TableCard
-        id={id}
-        name={name}
-        photo={photo}
-        tags={tags}
-        author={author}
-      />
+    render: (name, { id, photo, author }) => (
+      <TableCard id={id} name={name} photo={photo} author={author} />
     ),
   },
   {
@@ -112,6 +109,16 @@ const columns: ColumnsType<RecipeType> = [
 ]
 
 export default function Home() {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const showModal = () => {
+    setIsModalOpen(true)
+  }
+
+  const handleCancel = () => {
+    setIsModalOpen(false)
+  }
+
   return (
     <main className="home-page">
       <div className="home-page__wrapper">
@@ -127,11 +134,16 @@ export default function Home() {
           уникальные рецепты и делиться ими с другими людьми.
         </Paragraph>
         <Divider className="home-page__divider">Список рецептов</Divider>
-        <Search
-          placeholder="Поиск по рецептам"
-          className="home-page__search"
-          size="large"
-        />
+        <div className="home-page__toolbar">
+          <Search
+            placeholder="Поиск по рецептам"
+            className="home-page__search"
+          />
+          <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
+            Добавить рецепт
+          </Button>
+        </div>
+
         <Table
           showHeader={true}
           columns={columns}
@@ -139,6 +151,18 @@ export default function Home() {
           pagination={{ position: ['bottomCenter'] }}
           className="table"
         />
+
+        <Modal
+          className="home-page__modal"
+          title="Создание рецепта"
+          centered
+          width={700}
+          footer={null}
+          open={isModalOpen}
+          onCancel={handleCancel}
+        >
+          <RecipeModal></RecipeModal>
+        </Modal>
       </div>
     </main>
   )

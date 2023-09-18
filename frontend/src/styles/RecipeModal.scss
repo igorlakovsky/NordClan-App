@@ -1,0 +1,20 @@
+.recipe-modal {
+  margin-top: 20px;
+  user-select: none;
+
+  &__upload {
+    .ant-upload-select {
+      width: 100% !important;
+      height: 120px !important;
+    }
+
+    .ant-upload-list-item-container {
+      width: 100% !important;
+      height: 120px !important;
+    }
+  }
+
+  &__number {
+    width: 100% !important;
+  }
+}

@@ -1,6 +1,6 @@
 import '../styles/recipe.scss'
 
-import { Divider, Tag, Timeline, Typography } from 'antd'
+import { Divider, Timeline, Typography } from 'antd'
 
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { IngredientType } from '../components/TableRecipe'
@@ -13,7 +13,7 @@ type RecipeDetailType = {
   id: string
   photo: string
   name: string
-  tags: string[]
+  description: string
   key: number
   author: string
   servings: number
@@ -27,7 +27,8 @@ const data: RecipeDetailType = {
   id: '1',
   photo: 'pancakes.jpg',
   name: 'Банановые панкейки',
-  tags: ['nice', 'developer'],
+  description:
+    'Сервис, в котором вы можете просмотреть список рецептов опубликованные пользователями.',
   key: 1,
   author: 'test',
   servings: 6,
@@ -80,14 +81,13 @@ export default function Recipe() {
           {data.name}
         </Title>
         <Paragraph type="secondary" className="recipe-page__description">
-          Сервис, в котором вы можете просмотреть список рецептов опубликованные
-          пользователями.
+          {data.description}
         </Paragraph>
-        <div className="recipe-page__tags">
-          {data.tags.map((tag) => {
-            return <Tag key={tag}>{tag.toUpperCase()}</Tag>
-          })}
-        </div>
+        <RecipeInfo
+          servings={data.servings}
+          time={data.time}
+          rating={data.rating}
+        ></RecipeInfo>
         <Divider className="recipe-page__divider">Описание</Divider>
         <div className="recipe-page__info">
           <img
@@ -109,11 +109,6 @@ export default function Recipe() {
             </div>
           </div>
         </div>
-        <RecipeInfo
-          servings={data.servings}
-          time={data.time}
-          rating={data.rating}
-        ></RecipeInfo>
         <Divider className="recipe-page__divider">
           Инструкция приготовления
         </Divider>
