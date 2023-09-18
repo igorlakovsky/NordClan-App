@@ -1,28 +1,29 @@
 import '../styles/home.scss'
 
 import { Divider, Input, Table, Typography } from 'antd'
+import { FieldTimeOutlined, HeartOutlined } from '@ant-design/icons'
 import { IngredientType, TableRecipe } from '../components/TableRecipe'
 
 import type { ColumnsType } from 'antd/es/table'
-import { FieldTimeOutlined } from '@ant-design/icons'
 import TableCard from '../components/TableCard'
 
 const { Title, Paragraph } = Typography
 const { Search } = Input
 
-interface DataType {
+type RecipeType = {
   id: string
   photo: string
   name: string
   tags: string[]
   key: number
   author: string
+  servings: number
   recipe: IngredientType[]
   time: number
   rating: number
 }
 
-const data: DataType[] = [
+const data: RecipeType[] = [
   {
     id: '1',
     photo: 'pancakes.jpg',
@@ -30,6 +31,7 @@ const data: DataType[] = [
     tags: ['nice', 'developer'],
     key: 1,
     author: 'test',
+    servings: 6,
     recipe: [
       { title: 'Ингредиент', count: '500 г' },
       { title: 'Ингредиент', count: '500 г' },
@@ -39,23 +41,46 @@ const data: DataType[] = [
     time: 120,
     rating: 5,
   },
+  {
+    id: '2',
+    photo: 'pancakes.jpg',
+    name: 'Банановые панкейки 2',
+    tags: ['nice', 'developer'],
+    key: 2,
+    author: 'test',
+    servings: 4,
+    recipe: [
+      { title: 'Ингредиент', count: '500 г' },
+      { title: 'Ингредиент', count: '500 г' },
+      { title: 'Ингредиент', count: '500 г' },
+      { title: 'Ингредиент', count: '500 г' },
+    ],
+    time: 60,
+    rating: 3,
+  },
 ]
 
-const columns: ColumnsType<DataType> = [
+const columns: ColumnsType<RecipeType> = [
   {
     title: 'Название',
     dataIndex: 'name',
     key: 'name',
-    render: (name, { photo, tags, author }) => (
-      <TableCard name={name} photo={photo} tags={tags} author={author} />
+    render: (name, { id, photo, tags, author }) => (
+      <TableCard
+        id={id}
+        name={name}
+        photo={photo}
+        tags={tags}
+        author={author}
+      />
     ),
   },
   {
     title: 'Рецепт',
     dataIndex: 'recipe',
     key: 'recipe',
-    render: (recipe) => (
-      <TableRecipe ingredients={recipe} servings={6}></TableRecipe>
+    render: (recipe, { servings }) => (
+      <TableRecipe ingredients={recipe} servings={servings}></TableRecipe>
     ),
   },
   {
@@ -63,7 +88,7 @@ const columns: ColumnsType<DataType> = [
     dataIndex: 'time',
     key: 'time',
     render: (time) => (
-      <div className="table__time">
+      <div className="table__info">
         <FieldTimeOutlined style={{ fontSize: '16px' }} />
         <span>{time} МИНУТ</span>
       </div>
@@ -73,6 +98,16 @@ const columns: ColumnsType<DataType> = [
     title: 'Рейтинг',
     dataIndex: 'rating',
     key: 'rating',
+    align: 'center',
+    render: (rating) => (
+      <div
+        className="table__info"
+        style={{ justifyContent: 'center', cursor: 'pointer' }}
+      >
+        <HeartOutlined style={{ fontSize: '16px' }} />
+        <span>{rating}</span>
+      </div>
+    ),
   },
 ]
 
@@ -91,13 +126,7 @@ export default function Home() {
           пользователями. Зарегистрируйтесь для возможности создавать свои
           уникальные рецепты и делиться ими с другими людьми.
         </Paragraph>
-        <Divider
-          className="home-page__divider"
-          // orientation="left"
-          // orientationMargin="0"
-        >
-          Список рецептов
-        </Divider>
+        <Divider className="home-page__divider">Список рецептов</Divider>
         <Search
           placeholder="Поиск по рецептам"
           className="home-page__search"

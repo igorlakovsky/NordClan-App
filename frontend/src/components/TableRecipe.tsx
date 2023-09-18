@@ -42,7 +42,7 @@ export function TableRecipe({ ingredients, servings }: RecipeProps) {
         <div className="table__recipe__title">
           <CoffeeOutlined style={{ fontSize: '16px' }} />
           <div className="table__recipe__title__count">{servings}</div>
-          <div className="table__recipe__title__name">ПОРЦИЙ</div>
+          <div className="table__recipe__title__name">ПОРЦИИ</div>
         </div>
       </div>
     </Popover>
