@@ -18,3 +18,10 @@ docker-compose up
 ```
 docker-compose down
 ```
+
+## Данные пользователей
+| Login  | Password |
+| ---------- | --------- |
+| admin  | admin  |
+| user  | 12345  |
+| superuser  | superuser  |
