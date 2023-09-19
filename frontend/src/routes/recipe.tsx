@@ -35,7 +35,9 @@ export default function Recipe() {
 
   const fetchRecipe = async (id: string) => {
     try {
-      const responce = await axios.get(`http://localhost:8080/recipes/${id}`)
+      const responce = await axios.get(
+        `${import.meta.env.VITE_BACKEND_HOST}/recipes/${id}`
+      )
       dispatch(recipeAdd(responce.data))
     } catch (error) {
       const err = error as AxiosError

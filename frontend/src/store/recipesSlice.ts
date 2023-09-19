@@ -16,7 +16,9 @@ const initialState: recipesState = {
 }
 
 export const fetchRecipes = createAsyncThunk('recipes/fetch', async () => {
-  const responce = await axios.get('http://localhost:8080/recipes')
+  const responce = await axios.get(
+    `${import.meta.env.VITE_BACKEND_HOST}/recipes`
+  )
   return responce.data
 })
 

@@ -24,7 +24,10 @@ export default function Layout() {
 
   const submitUser = async (data: User) => {
     try {
-      const responce = await axios.post('http://localhost:8080/auth', data)
+      const responce = await axios.post(
+        `${import.meta.env.VITE_BACKEND_HOST}/auth`,
+        data
+      )
       dispatch(authUser(responce.data))
       setOpenPopover(false)
     } catch (error) {

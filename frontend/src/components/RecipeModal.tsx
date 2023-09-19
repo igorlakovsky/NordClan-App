@@ -56,8 +56,8 @@ export default function RecipeModal({ initValue, onClose }) {
     try {
       await axios.post(
         initValue
-          ? 'http://localhost:8080/recipes/update'
-          : 'http://localhost:8080/recipes/create',
+          ? `${import.meta.env.VITE_BACKEND_HOST}/recipes/update`
+          : `${import.meta.env.VITE_BACKEND_HOST}/recipes/create`,
         data
       )
       dispatch(fetchRecipes())

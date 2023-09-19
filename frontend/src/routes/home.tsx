@@ -187,7 +187,7 @@ export default function Home() {
         <Table
           showHeader={true}
           columns={columns}
-          dataSource={filterData(recipesData, searchFilter)}
+          dataSource={filterData(recipesData, searchFilter!)}
           pagination={{ position: ['bottomCenter'] }}
           className="table"
         />
