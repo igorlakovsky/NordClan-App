@@ -27,6 +27,9 @@ const recipesSlice = createSlice({
     recipeAdd: (state, action) => {
       state.recipes.push(action.payload)
     },
+    recipesReplace: (state, action) => {
+      state.recipes = action.payload
+    },
   },
   extraReducers(builder) {
     builder
@@ -44,6 +47,6 @@ const recipesSlice = createSlice({
   },
 })
 
-export const { recipeAdd } = recipesSlice.actions
+export const { recipeAdd, recipesReplace } = recipesSlice.actions
 
 export default recipesSlice.reducer

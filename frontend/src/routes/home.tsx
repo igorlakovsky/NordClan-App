@@ -11,6 +11,7 @@ import {
 } from 'antd'
 import {
   FieldTimeOutlined,
+  FormOutlined,
   HeartOutlined,
   PlusOutlined,
 } from '@ant-design/icons'
@@ -40,59 +41,78 @@ export type RecipeType = {
   instruction: string[]
 }
 
-const columns: ColumnsType<RecipeType> = [
-  {
-    title: 'Название',
-    dataIndex: 'name',
-    key: 'name',
-    render: (name, { id, photo, author }) => (
-      <TableCard id={id} name={name} photo={photo} author={author} />
-    ),
-  },
-  {
-    title: 'Рецепт',
-    dataIndex: 'recipe',
-    key: 'recipe',
-    render: (recipe, { servings }) => (
-      <TableRecipe ingredients={recipe} servings={servings}></TableRecipe>
-    ),
-  },
-  {
-    title: 'Сложность',
-    dataIndex: 'time',
-    key: 'time',
-    render: (time) => (
-      <div className="table__info">
-        <FieldTimeOutlined style={{ fontSize: '16px' }} />
-        <span>{time} МИНУТ</span>
-      </div>
-    ),
-  },
-  {
-    title: 'Рейтинг',
-    dataIndex: 'rating',
-    key: 'rating',
-    align: 'center',
-    render: (rating) => (
-      <div
-        className="table__info"
-        style={{ justifyContent: 'center', cursor: 'pointer' }}
-      >
-        <HeartOutlined style={{ fontSize: '16px' }} />
-        <span>{rating}</span>
-      </div>
-    ),
-  },
-]
-
 export default function Home() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-
   const dispatch = useAppDispatch()
 
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [recipeEditId, setRecipeEditId] = useState<string | undefined>(
+    undefined
+  )
+
   const recipesData = useAppSelector((state) => state.recipes.recipes)
+  const recipesDataById = useAppSelector((state) =>
+    state.recipes.recipes.find((recipe) => {
+      return recipe.id === recipeEditId
+    })
+  )
   const recipesStatus = useAppSelector((state) => state.recipes.status)
   const recipesError = useAppSelector((state) => state.recipes.error)
+  const userAuth = useAppSelector((state) => state.user.auth)
+  const userLogin = useAppSelector((state) => state.user.login)
+
+  const columns: ColumnsType<RecipeType> = [
+    {
+      title: 'Название',
+      dataIndex: 'name',
+      key: 'name',
+      render: (name, { id, photo, author }) => (
+        <TableCard id={id} name={name} photo={photo} author={author} />
+      ),
+    },
+    {
+      title: 'Рецепт',
+      dataIndex: 'recipe',
+      key: 'recipe',
+      render: (recipe, { servings }) => (
+        <TableRecipe ingredients={recipe} servings={servings}></TableRecipe>
+      ),
+    },
+    {
+      title: 'Сложность',
+      dataIndex: 'time',
+      key: 'time',
+      render: (time) => (
+        <div className="table__info">
+          <FieldTimeOutlined style={{ fontSize: '16px' }} />
+          <span>{time} МИНУТ</span>
+        </div>
+      ),
+    },
+    {
+      title: 'Рейтинг',
+      dataIndex: 'rating',
+      key: 'rating',
+      align: 'center',
+      render: (rating, { author, id }) => (
+        <>
+          {userLogin === author ? (
+            <FormOutlined
+              style={{ cursor: 'pointer', fontSize: '16px', color: '#1677ff' }}
+              onClick={() => {
+                setRecipeEditId(id)
+                modalShow()
+              }}
+            />
+          ) : (
+            <div className="table__info" style={{ justifyContent: 'center' }}>
+              <HeartOutlined style={{ fontSize: '16px' }} />
+              <span>{rating}</span>
+            </div>
+          )}
+        </>
+      ),
+    },
+  ]
 
   const modalShow = () => {
     setIsModalOpen(true)
@@ -100,6 +120,7 @@ export default function Home() {
 
   const modalCancel = () => {
     setIsModalOpen(false)
+    setRecipeEditId(undefined)
   }
 
   useEffect(() => {
@@ -130,9 +151,11 @@ export default function Home() {
             placeholder="Поиск по рецептам"
             className="home-page__search"
           />
-          <Button type="primary" icon={<PlusOutlined />} onClick={modalShow}>
-            Добавить рецепт
-          </Button>
+          {userAuth ? (
+            <Button type="primary" icon={<PlusOutlined />} onClick={modalShow}>
+              Добавить рецепт
+            </Button>
+          ) : null}
         </div>
 
         <Table
@@ -145,14 +168,18 @@ export default function Home() {
 
         <Modal
           className="home-page__modal"
-          title="Создание рецепта"
+          title={recipeEditId ? 'Редактирование рецепта' : 'Создание рецепта'}
           centered
           width={700}
           footer={null}
           open={isModalOpen}
           onCancel={modalCancel}
+          destroyOnClose={true}
         >
-          <RecipeModal></RecipeModal>
+          <RecipeModal
+            initValue={recipeEditId ? recipesDataById : null}
+            onClose={modalCancel}
+          ></RecipeModal>
         </Modal>
       </div>
     </main>

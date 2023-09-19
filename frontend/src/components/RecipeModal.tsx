@@ -9,16 +9,20 @@ import {
   InputNumber,
   Row,
   Upload,
+  notification,
 } from 'antd'
 import {
   MinusCircleOutlined,
   PlusOutlined,
   UploadOutlined,
 } from '@ant-design/icons'
+import axios, { AxiosError } from 'axios'
+import { useAppDispatch, useAppSelector } from '../store/hooks'
 
 import { IngredientType } from '../components/TableRecipe'
 import type { UploadFile } from 'antd/es/upload/interface'
 import type { UploadProps } from 'antd/es/upload'
+import { fetchRecipes } from '../store/recipesSlice'
 import { useState } from 'react'
 
 const { TextArea } = Input
@@ -32,8 +36,12 @@ type RecipeFormType = {
   instruction: string[]
 }
 
-export default function RecipeModal() {
+export default function RecipeModal({ initValue, onClose }) {
+  const dispatch = useAppDispatch()
+
   const [photo, setPhoto] = useState<UploadFile>()
+
+  const userLogin = useAppSelector((state) => state.user.login)
 
   const changeUpload: UploadProps['onChange'] = (info) => {
     if (info.fileList.length) {
@@ -43,15 +51,28 @@ export default function RecipeModal() {
     }
   }
 
-  const onFinish = (values: RecipeFormType) => {
-    console.log(values)
+  const onFinish = async (values: RecipeFormType) => {
+    const data = { ...values, author: userLogin, id: initValue?.id }
+    try {
+      await axios.post(
+        initValue
+          ? 'http://localhost:8080/recipes/update'
+          : 'http://localhost:8080/recipes/create',
+        data
+      )
+      dispatch(fetchRecipes())
+      onClose()
+    } catch (error) {
+      const err = error as AxiosError
+      notification.error({ message: err.message })
+    }
   }
 
   return (
     <Form
       layout="vertical"
       className="recipe-modal"
-      initialValues={{ recipe: [{}], instruction: [''] }}
+      initialValues={initValue ?? { recipe: [{}], instruction: [''] }}
       onFinish={onFinish}
     >
       <Row gutter={16}>
@@ -60,9 +81,9 @@ export default function RecipeModal() {
             <Upload
               listType="picture-card"
               className="recipe-modal__upload"
-              beforeUpload={() => {
-                return false
-              }}
+              // beforeUpload={() => {
+              //   return false
+              // }}
               onChange={changeUpload}
             >
               {photo ? null : (
@@ -230,7 +251,7 @@ export default function RecipeModal() {
       </Row>
       <Form.Item style={{ textAlign: 'end', marginTop: '20px' }}>
         <Button type="primary" htmlType="submit">
-          Опубликовать
+          {initValue ? 'Сохранить' : 'Опубликовать'}
         </Button>
       </Form.Item>
     </Form>

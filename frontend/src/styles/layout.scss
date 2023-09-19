@@ -29,12 +29,27 @@
   }
 
   &__user {
+    display: flex;
+    gap: 12px;
+    align-items: center;
     margin-top: 10px;
     cursor: pointer;
+
+    span {
+      color: rgb(33 54 59 / 85%);
+    }
 
     img {
       width: 34px;
       filter: grayscale(20%);
+    }
+  }
+
+  &__form {
+    margin-bottom: 8px;
+
+    &__wrapper {
+      margin: 10px;
     }
   }
 }
