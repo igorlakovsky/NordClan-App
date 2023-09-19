@@ -1,16 +1,31 @@
 const express = require("express");
+const path = require("path");
 const cors = require("cors");
+const fs = require("fs/promises");
 
 const app = express();
 
-var corsOptions = {
-  origin: "http://localhost:8081"
-};
+app.use(cors());
 
-// app.use(cors(corsOptions));
+app.get("/recipes", async (req, res) => {
+  res.header("Content-Type", "application/json");
+  res.sendFile(path.join(__dirname, "data.json"));
+});
 
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to bezkoder application." });
+app.get("/recipes/:id", async (req, res) => {
+  try {
+    const data = JSON.parse(await fs.readFile("data.json", "utf8"));
+    const findValue = data.find((value) => {
+      return value.id === req.params.id;
+    });
+    if (findValue === undefined) {
+      res.status(404).send("Not Found!");
+    } else {
+      res.json(findValue);
+    }
+  } catch (err) {
+    console.error(err);
+  }
 });
 
 const PORT = process.env.PORT || 8080;

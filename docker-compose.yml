@@ -10,6 +10,7 @@ services:
   #     dockerfile: Dockerfile
   #   volumes:
   #     - /backend
+  #     - /usr/src/app/node_modules
 
   frontend:
     container_name: vite

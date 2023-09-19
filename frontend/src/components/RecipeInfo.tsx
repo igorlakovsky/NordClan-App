@@ -9,9 +9,9 @@ import {
 import { Divider } from 'antd'
 
 type RecipeInfoProps = {
-  servings: number
-  time: number
-  rating: number
+  servings?: number
+  time?: number
+  rating?: number
 }
 
 export default function RecipeInfo({

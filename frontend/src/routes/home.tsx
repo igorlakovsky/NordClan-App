@@ -1,67 +1,44 @@
 import '../styles/home.scss'
 
-import { Button, Divider, Input, Modal, Table, Typography } from 'antd'
+import {
+  Button,
+  Divider,
+  Input,
+  Modal,
+  Table,
+  Typography,
+  notification,
+} from 'antd'
 import {
   FieldTimeOutlined,
   HeartOutlined,
   PlusOutlined,
 } from '@ant-design/icons'
 import { IngredientType, TableRecipe } from '../components/TableRecipe'
+import { useAppDispatch, useAppSelector } from '../store/hooks'
+import { useEffect, useState } from 'react'
 
 import type { ColumnsType } from 'antd/es/table'
 import RecipeModal from '../components/RecipeModal'
 import TableCard from '../components/TableCard'
-import { useState } from 'react'
+import { fetchRecipes } from '../store/recipesSlice'
 
 const { Title, Paragraph } = Typography
 const { Search } = Input
 
-type RecipeType = {
+export type RecipeType = {
   id: string
   photo: string
   name: string
+  description: string
   key: number
   author: string
   servings: number
   recipe: IngredientType[]
   time: number
   rating: number
+  instruction: string[]
 }
-
-const data: RecipeType[] = [
-  {
-    id: '1',
-    photo: 'pancakes.jpg',
-    name: 'Банановые панкейки',
-    key: 1,
-    author: 'test',
-    servings: 6,
-    recipe: [
-      { title: 'Ингредиент', count: '500 г' },
-      { title: 'Ингредиент', count: '500 г' },
-      { title: 'Ингредиент', count: '500 г' },
-      { title: 'Ингредиент', count: '500 г' },
-    ],
-    time: 120,
-    rating: 5,
-  },
-  {
-    id: '2',
-    photo: 'pancakes.jpg',
-    name: 'Банановые панкейки 2',
-    key: 2,
-    author: 'test',
-    servings: 4,
-    recipe: [
-      { title: 'Ингредиент', count: '500 г' },
-      { title: 'Ингредиент', count: '500 г' },
-      { title: 'Ингредиент', count: '500 г' },
-      { title: 'Ингредиент', count: '500 г' },
-    ],
-    time: 60,
-    rating: 3,
-  },
-]
 
 const columns: ColumnsType<RecipeType> = [
   {
@@ -111,13 +88,27 @@ const columns: ColumnsType<RecipeType> = [
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const showModal = () => {
+  const dispatch = useAppDispatch()
+
+  const recipesData = useAppSelector((state) => state.recipes.recipes)
+  const recipesStatus = useAppSelector((state) => state.recipes.status)
+  const recipesError = useAppSelector((state) => state.recipes.error)
+
+  const modalShow = () => {
     setIsModalOpen(true)
   }
 
-  const handleCancel = () => {
+  const modalCancel = () => {
     setIsModalOpen(false)
   }
+
+  useEffect(() => {
+    if (recipesStatus === 'idle') {
+      dispatch(fetchRecipes())
+    } else if (recipesStatus === 'failed') {
+      notification.error({ message: recipesError })
+    }
+  }, [recipesStatus, recipesError, dispatch])
 
   return (
     <main className="home-page">
@@ -139,7 +130,7 @@ export default function Home() {
             placeholder="Поиск по рецептам"
             className="home-page__search"
           />
-          <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
+          <Button type="primary" icon={<PlusOutlined />} onClick={modalShow}>
             Добавить рецепт
           </Button>
         </div>
@@ -147,7 +138,7 @@ export default function Home() {
         <Table
           showHeader={true}
           columns={columns}
-          dataSource={data}
+          dataSource={recipesData}
           pagination={{ position: ['bottomCenter'] }}
           className="table"
         />
@@ -159,7 +150,7 @@ export default function Home() {
           width={700}
           footer={null}
           open={isModalOpen}
-          onCancel={handleCancel}
+          onCancel={modalCancel}
         >
           <RecipeModal></RecipeModal>
         </Modal>

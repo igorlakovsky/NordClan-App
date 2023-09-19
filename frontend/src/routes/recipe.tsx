@@ -1,57 +1,20 @@
 import '../styles/recipe.scss'
 
-import { Divider, Timeline, Typography } from 'antd'
+import { Divider, Timeline, Typography, notification } from 'antd'
+import axios, { AxiosError } from 'axios'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { ArrowLeftOutlined } from '@ant-design/icons'
-import { IngredientType } from '../components/TableRecipe'
 import RecipeInfo from '../components/RecipeInfo'
-import { useNavigate } from 'react-router-dom'
+import { recipeAdd } from '../store/recipesSlice'
+import { useAppSelector } from '../store/hooks'
+import { useDispatch } from 'react-redux'
+import { useEffect } from 'react'
 
 const { Title, Paragraph } = Typography
 
-type RecipeDetailType = {
-  id: string
-  photo: string
-  name: string
-  description: string
-  key: number
-  author: string
-  servings: number
-  recipe: IngredientType[]
-  time: number
-  rating: number
-  instruction: string[]
-}
-
-const data: RecipeDetailType = {
-  id: '1',
-  photo: 'pancakes.jpg',
-  name: 'Банановые панкейки',
-  description:
-    'Сервис, в котором вы можете просмотреть список рецептов опубликованные пользователями.',
-  key: 1,
-  author: 'test',
-  servings: 6,
-  recipe: [
-    { title: 'Ингредиент', count: '500 г' },
-    { title: 'Ингредиент', count: '500 г' },
-    { title: 'Ингредиент', count: '500 г' },
-    { title: 'Ингредиент', count: '500 г' },
-  ],
-  time: 120,
-  rating: 5,
-  instruction: [
-    'Смешать муку, сахар, разрыхлитель, соду и соль.',
-    'Банан пюрировать. Желток взбить, добавить молоко, банан и растопленное масло, взбивать 1 минуту.',
-    'Мучную смесь смешать с жидкой и перемешать венчиком или миксером.',
-    'Белки хорошо взбить и аккуратно добавить в тесто.',
-    'Жарить на сухой сковородке с одной стороны до появления пузырьков потом перевернуть.',
-    '*из этого количества продуктов получается 9 блинчиков',
-  ],
-}
-
-const timelineItems = (instruction: string[]) => {
-  return instruction.map((text) => {
+const timelineItems = (instruction?: string[]) => {
+  return instruction?.map((text) => {
     return {
       color: 'black',
       children: text,
@@ -61,6 +24,31 @@ const timelineItems = (instruction: string[]) => {
 
 export default function Recipe() {
   const navigate = useNavigate()
+  const params = useParams()
+  const dispatch = useDispatch()
+
+  const recipeData = useAppSelector((state) =>
+    state.recipes.recipes.find((recipe) => {
+      return recipe.id === params.recipeId
+    })
+  )
+
+  const fetchRecipe = async (id: string) => {
+    try {
+      const responce = await axios.get(`http://localhost:8080/recipes/${id}`)
+      dispatch(recipeAdd(responce.data))
+    } catch (error) {
+      const err = error as AxiosError
+      notification.error({ message: err.message })
+    }
+  }
+
+  useEffect(() => {
+    if (!recipeData) {
+      fetchRecipe(params.recipeId!)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <main className="recipe-page">
@@ -78,26 +66,26 @@ export default function Recipe() {
           <img src="/images/chef.png"></img>
         </div>
         <Title level={1} className="recipe-page__title">
-          {data.name}
+          {recipeData?.name}
         </Title>
         <Paragraph type="secondary" className="recipe-page__description">
-          {data.description}
+          {recipeData?.description}
         </Paragraph>
         <RecipeInfo
-          servings={data.servings}
-          time={data.time}
-          rating={data.rating}
+          servings={recipeData?.servings}
+          time={recipeData?.time}
+          rating={recipeData?.rating}
         ></RecipeInfo>
         <Divider className="recipe-page__divider">Описание</Divider>
         <div className="recipe-page__info">
           <img
             className="recipe-page__info__photo"
-            src={`/images/${data.photo}`}
+            src={`/images/${recipeData?.photo}`}
           />
           <div className="recipe-page__info__ingredients">
             <span>ИНГРЕДИЕНТЫ:</span>
             <div className="recipe-page__info__ingredients__item">
-              {data.recipe.map((ingredient, index) => {
+              {recipeData?.recipe.map((ingredient, index) => {
                 return (
                   <div key={index} className="table__popover">
                     <p>{ingredient.title}</p>
@@ -113,7 +101,7 @@ export default function Recipe() {
           Инструкция приготовления
         </Divider>
         <div className="recipe-page__instruction">
-          <Timeline items={timelineItems(data.instruction)} />
+          <Timeline items={timelineItems(recipeData?.instruction)} />
         </div>
       </div>
     </main>
