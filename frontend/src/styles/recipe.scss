@@ -51,12 +51,6 @@
     text-align: center;
   }
 
-  &__tags {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 40px;
-  }
-
   &__divider {
     padding: 0 16px;
     margin-bottom: 40px !important;
@@ -71,8 +65,8 @@
     margin-bottom: 40px;
 
     &__photo {
-      width: 180px;
-      height: 180px;
+      width: 360px;
+      height: 360px;
       border-radius: 4px;
       box-shadow: 0 0 4px 0 rgb(0 0 0 / 20%);
     }

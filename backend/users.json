@@ -4,11 +4,11 @@
     "password": "admin"
   },
   {
-    "login": "admin2",
-    "password": "admin2"
+    "login": "user",
+    "password": "12345"
   },
   {
-    "login": "admin3",
-    "password": "admin3"
+    "login": "superuser",
+    "password": "superuser"
   }
 ]

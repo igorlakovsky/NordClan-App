@@ -29,7 +29,11 @@ export function TableRecipe({ ingredients, servings }: RecipeProps) {
   )
 
   return (
-    <Popover content={PopoverContent} title="ИНГРЕДИЕНТЫ">
+    <Popover
+      content={PopoverContent}
+      title="ИНГРЕДИЕНТЫ"
+      getPopupContainer={(trigger) => trigger.parentElement!}
+    >
       <div className="table__recipe">
         <div className="table__recipe__title">
           <div className="table__recipe__title__count">

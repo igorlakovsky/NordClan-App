@@ -9,9 +9,11 @@
       flex-direction: column;
       gap: 4px;
       align-items: center;
+      width: 300px;
     }
 
     p {
+      min-width: max-content;
       padding-right: 12px;
       margin: 0;
     }

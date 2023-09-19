@@ -89,7 +89,7 @@ export default function RecipeModal({ initValue, onClose }) {
               {photo ? null : (
                 <div>
                   <UploadOutlined />
-                  <div style={{ marginTop: 8 }}>Выберете файл</div>
+                  <div style={{ marginTop: 8 }}>Выберите файл</div>
                 </div>
               )}
             </Upload>

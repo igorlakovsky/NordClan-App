@@ -44,6 +44,9 @@ export type RecipeType = {
 export default function Home() {
   const dispatch = useAppDispatch()
 
+  const [searchFilter, setSearchFilter] = useState<string | undefined>(
+    undefined
+  )
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [recipeEditId, setRecipeEditId] = useState<string | undefined>(
     undefined
@@ -81,6 +84,7 @@ export default function Home() {
       title: 'Сложность',
       dataIndex: 'time',
       key: 'time',
+      sorter: (a, b) => a.time - b.time,
       render: (time) => (
         <div className="table__info">
           <FieldTimeOutlined style={{ fontSize: '16px' }} />
@@ -93,6 +97,8 @@ export default function Home() {
       dataIndex: 'rating',
       key: 'rating',
       align: 'center',
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => a.rating - b.rating,
       render: (rating, { author, id }) => (
         <>
           {userLogin === author ? (
@@ -123,6 +129,25 @@ export default function Home() {
     setRecipeEditId(undefined)
   }
 
+  const filterData = (data: RecipeType[], filter: string) => {
+    return filter
+      ? data.filter((value) => {
+          return Object.values(value).some((val) => {
+            if (!Array.isArray(val)) return String(val).includes(filter)
+            else
+              return Object.values(val).some((v) => {
+                if (!Array.isArray(val)) return String(v).includes(filter)
+                return String(v).includes(filter)
+              })
+          })
+        })
+      : data
+  }
+
+  const onSearch = (value: string) => {
+    setSearchFilter(value)
+  }
+
   useEffect(() => {
     if (recipesStatus === 'idle') {
       dispatch(fetchRecipes())
@@ -150,6 +175,7 @@ export default function Home() {
           <Search
             placeholder="Поиск по рецептам"
             className="home-page__search"
+            onSearch={onSearch}
           />
           {userAuth ? (
             <Button type="primary" icon={<PlusOutlined />} onClick={modalShow}>
@@ -161,7 +187,7 @@ export default function Home() {
         <Table
           showHeader={true}
           columns={columns}
-          dataSource={recipesData}
+          dataSource={filterData(recipesData, searchFilter)}
           pagination={{ position: ['bottomCenter'] }}
           className="table"
         />
